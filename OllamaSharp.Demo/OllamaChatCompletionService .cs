@@ -15,8 +15,14 @@ namespace OllamaSharp.Demo
 {
     public class OllamaChatCompletionService : IChatCompletionService
     {
-        // public property for the model url endpoint
+
+        /// <summary>
+        /// 模型URL
+        /// </summary>
         public string ModelUrl { get; set; }
+        /// <summary>
+        /// 模型名称
+        /// </summary>
         public string ModelName { get; set; }
         private readonly HttpClient _httpClient = new HttpClient();
 

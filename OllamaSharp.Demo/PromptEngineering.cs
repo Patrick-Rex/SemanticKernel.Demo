@@ -33,8 +33,7 @@ namespace OllamaSharp.Demo
         public static string ApplyCoT(string basePrompt)
         {
             return $@"{basePrompt}
-
-请一步一步思考这个问题，先分析所有已知条件，然后逐步推理，最后给出结论。";
+                    请一步一步思考这个问题，先分析所有已知条件，然后逐步推理，最后给出结论。";
         }
         
         /// <summary>
