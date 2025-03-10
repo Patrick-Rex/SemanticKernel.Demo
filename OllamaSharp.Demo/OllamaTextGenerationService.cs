@@ -1,11 +1,11 @@
 ﻿using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.TextGeneration;
-using OllamaSharp.ApiClient;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.CompilerServices;
+using System.Net.Http;
 using System.Text;
+using System.Text.Json;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace OllamaSharp.Demo
@@ -15,6 +15,7 @@ namespace OllamaSharp.Demo
         // public property for the model url endpoint
         public string ModelUrl { get; set; }
         public string ModelName { get; set; }
+        private readonly HttpClient _httpClient = new HttpClient();
 
         public IReadOnlyDictionary<string, object?> Attributes => new Dictionary<string, object?>();
 
@@ -30,34 +31,64 @@ namespace OllamaSharp.Demo
                 Console.WriteLine($"OllamaTextGenerationService: 发送请求到 {ModelUrl}, 模型: {ModelName}");
                 Console.WriteLine($"OllamaTextGenerationService: 提示: {prompt}");
                 
-                var ollama = new OllamaApiClient(ModelUrl, ModelName);
-                
-                // 使用Completion.Create而不是Generate，避免使用不存在的方法
-                var response = await ollama.Completion.Create(new CompletionRequest
+                // 创建请求正文
+                var requestBody = new
                 {
-                    Prompt = prompt,
-                    Stream = false
-                });
+                    model = ModelName,
+                    prompt = prompt,
+                    temperature = 0.7,
+                    stream = false
+                };
                 
-                if (response == null)
+                var jsonContent = JsonSerializer.Serialize(requestBody);
+                Console.WriteLine($"请求正文: {jsonContent}");
+                
+                var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
+                
+                // 判断ModelUrl是否已经包含了完整的API路径
+                string apiUrl = ModelUrl;
+                if (!apiUrl.Contains("/api/generate"))
                 {
-                    Console.WriteLine("OllamaTextGenerationService: API返回了null响应");
-                    return new List<TextContent>();
+                    apiUrl = apiUrl.TrimEnd('/') + "/api/generate";
                 }
                 
-                Console.WriteLine($"OllamaTextGenerationService: 收到响应: {response.Response}");
+                Console.WriteLine($"发送请求到: {apiUrl}");
+                
+                var response = await _httpClient.PostAsync(apiUrl, content, cancellationToken);
+                Console.WriteLine($"HTTP状态码: {response.StatusCode}");
+                
+                response.EnsureSuccessStatusCode();
+                
+                var responseJson = await response.Content.ReadAsStringAsync(cancellationToken);
+                Console.WriteLine($"收到响应: {responseJson}");
+                
+                // 解析JSON响应
+                using var doc = JsonDocument.Parse(responseJson);
+                
+                string textResponse = "";
+                
+                // 尝试获取response字段（标准Ollama API）
+                if (doc.RootElement.TryGetProperty("response", out var responseElement))
+                {
+                    textResponse = responseElement.GetString() ?? "";
+                }
+                
+                Console.WriteLine($"最终文本内容: {textResponse}");
+                
+                if (string.IsNullOrEmpty(textResponse))
+                {
+                    Console.WriteLine("警告: 文本生成响应为空");
+                }
                 
                 return new List<TextContent>
                 {
-                    new TextContent(response.Response)
+                    new TextContent(textResponse)
                 };
             }
-            catch (Exception ex)
+            catch (HttpRequestException httpEx)
             {
-                Console.WriteLine($"OllamaTextGenerationService异常: {ex.Message}");
-                Console.WriteLine($"堆栈跟踪: {ex.StackTrace}");
-                
-                // 重新抛出异常，让主程序处理
+                Console.WriteLine($"HTTP请求异常: {httpEx.Message}");
+                Console.WriteLine($"状态码: {httpEx.StatusCode}");
                 throw;
             }
         }
