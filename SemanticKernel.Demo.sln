@@ -1,9 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.13.35825.156 d17.13
+VisualStudioVersion = 17.13.35825.156
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SemanticKernel.Chat1", "SemanticKernel.Chat1\SemanticKernel.Chat1.csproj", "{338B04B7-65F1-4FF7-B98C-AB25C4783868}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OllamaSharp.Demo", "OllamaSharp.Demo\OllamaSharp.Demo.csproj", "{DE70E48E-5B2E-4B2C-81D9-2A06E5B59B79}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{338B04B7-65F1-4FF7-B98C-AB25C4783868}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{338B04B7-65F1-4FF7-B98C-AB25C4783868}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{338B04B7-65F1-4FF7-B98C-AB25C4783868}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DE70E48E-5B2E-4B2C-81D9-2A06E5B59B79}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DE70E48E-5B2E-4B2C-81D9-2A06E5B59B79}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DE70E48E-5B2E-4B2C-81D9-2A06E5B59B79}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DE70E48E-5B2E-4B2C-81D9-2A06E5B59B79}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

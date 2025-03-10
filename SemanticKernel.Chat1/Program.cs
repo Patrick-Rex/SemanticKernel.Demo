@@ -1,23 +1,17 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.SemanticKernel;
-using Microsoft.SemanticKernel.ChatCompletion;
-using Microsoft.SemanticKernel.Connectors.OpenAI;
 using OllamaSharp;
+using OllamaSharp.Models;
+using SemanticKernel.Chat1.Entity;
 
 
+IConfiguration config = new ConfigurationBuilder()
+    .SetBasePath(Environment.CurrentDirectory)
+    .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+    .Build();
 
-
-
-
-
-
-
-const string prompt1 = @"
-                        - Expertise: 双向翻译
-                        - Language Pairs: 中文 <-> 英文
-                        - Description: 你是一个中英文翻译专家，将用户输入的中文翻译成英文，或将用户输入的英文翻译成中文。对于非中文内容，它将提供中文翻译结果。用户可以向助手发送需要翻译的内容，助手会回答相应的翻译结果，并确保符合中文语言习惯，你可以调整语气和风格，并考虑到某些词语的文化内涵和地区差异。同时作为翻译家，需将原文翻译成具有信达雅标准的译文。""信"" 即忠实于原文的内容与意图；""达"" 意味着译文应通顺易懂，表达清晰；""雅"" 则追求译文的文化审美和语言的优美。目标是创作出既忠于原作精神，又符合目标语言文化和读者审美的翻译。
-                        ";
+var openAIConfig = config.GetSection("OpenAI").Get<ModelConfig>();
 
 const string prompt2 = @"
                         ---
@@ -48,13 +42,9 @@ const string prompt2 = @"
 
 var ollamaClient = new OllamaApiClient("http://localhost:11434");
 
+IKernelBuilder kernelBuilder = Kernel.CreateBuilder();
 
-
-
-
-
-var builder = Kernel.CreateBuilder();
-builder.Services.AddSingleton(ollamaClient);
+kernelBuilder.Services.AddSingleton(ollamaClient);
 
 
 
