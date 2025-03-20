@@ -1,0 +1,62 @@
+### 测试基础聊天接口 - 一次性响应
+POST http://localhost:5000/api/chat
+Content-Type: application/json
+
+"你好，请用简单的话解释什么是Semantic Kernel？"
+
+### 测试高级聊天接口 - 默认设置，流式响应
+POST http://localhost:5000/api/ask
+Content-Type: application/json
+
+{
+  "prompt": "你好，请用简单的话解释什么是Semantic Kernel？",
+  "provider": "AzureOpenAI",
+  "promptTemplate": "Contoso_Chat_Prompt"
+}
+
+### 测试高级聊天接口 - 技术支持模式
+POST http://localhost:5000/api/ask
+Content-Type: application/json
+
+{
+  "prompt": "如何在.NET应用程序中使用Semantic Kernel？请给出代码示例。",
+  "provider": "AzureOpenAI",
+  "promptTemplate": "TechSupport_Chat_Prompt",
+  "temperature": 0.5,
+  "maxTokens": 3000
+}
+
+### 测试高级聊天接口 - 使用OpenAI提供商
+POST http://localhost:5000/api/ask
+Content-Type: application/json
+
+{
+  "prompt": "什么是大型语言模型？",
+  "provider": "OpenAI",
+  "modelId": "gpt-3.5-turbo",
+  "enableStreaming": true,
+  "temperature": 0.7
+}
+
+### 测试高级聊天接口 - 使用React专家提示词
+POST http://localhost:5000/api/ask
+Content-Type: application/json
+
+{
+  "prompt": "我想创建一个简单的React Todo应用，需要有添加、删除和标记完成的功能，请给我代码。",
+  "provider": "AzureOpenAI",
+  "promptTemplate": "React_Chat_Prompt",
+  "temperature": 0.3,
+  "maxTokens": 4000
+}
+
+### 测试高级聊天接口 - 禁用流式输出
+POST http://localhost:5000/api/ask
+Content-Type: application/json
+
+{
+  "prompt": "什么是微软的Semantic Kernel项目？",
+  "provider": "AzureOpenAI",
+  "promptTemplate": "Contoso_Chat_Prompt",
+  "enableStreaming": false
+} 

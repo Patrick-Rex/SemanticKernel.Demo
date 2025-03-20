@@ -1,0 +1,6 @@
+@SemanticKernel.Chat_HostAddress = http://localhost:5167
+
+GET {{SemanticKernel.Chat_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
